@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Token - Turbo Game</title>
+    <title>Turbo Token Clicker</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -17,101 +17,129 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9;
+            background: linear-gradient(135deg, #ff9a44, #ff3e62);
+            text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            flex-direction: column;
+            color: #fff;
             padding: 20px;
         }
 
         .container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
             max-width: 400px;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
             font-size: 24px;
             font-weight: 600;
-            margin-bottom: 20px;
-            color: #333;
         }
 
         p {
             font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
+            margin: 10px 0 20px;
+        }
+
+        .coin {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .coin:active {
+            transform: scale(0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .token-count {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
         }
 
         .button {
-            background: linear-gradient(135deg, #ff6a00, #ee0979);
+            background: linear-gradient(135deg, #4CAF50, #008000);
             border: none;
             color: white;
-            padding: 15px 25px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             font-weight: 600;
             border-radius: 50px;
             cursor: pointer;
             transition: 0.3s ease;
-            width: 100%;
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
         }
 
         .button:hover {
-            background: linear-gradient(135deg, #ee0979, #ff6a00);
-            transform: translateY(-5px);
-        }
-
-        .token {
-            margin-top: 30px;
-            background-color: #f0f0f0;
-            padding: 10px 20px;
-            font-size: 18px;
-            border-radius: 10px;
-            font-weight: 600;
-            color: #333;
-            display: inline-block;
-            width: auto;
-            word-wrap: break-word;
+            background: linear-gradient(135deg, #008000, #4CAF50);
+            transform: translateY(-3px);
         }
 
         @media screen and (max-width: 500px) {
             .container {
-                padding: 30px;
+                padding: 20px;
             }
 
             h1 {
                 font-size: 20px;
             }
 
+            .coin {
+                width: 100px;
+                height: 100px;
+                font-size: 24px;
+            }
+
             .button {
-                font-size: 16px;
-                padding: 12px 20px;
+                font-size: 14px;
+                padding: 10px 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Turbo Game</h1>
-        <p>Click the button below to get your **Turbo Token** and start playing!</p>
-        <button class="button" onclick="generateToken()">Get Token</button>
+        <h1>Turbo Token Clicker</h1>
+        <p>Tap the coin to earn tokens!</p>
 
-        <div id="tokenOutput" class="token" style="display: none;">
-            Token: <span id="tokenValue">--</span>
-        </div>
+        <div class="coin" onclick="earnToken()">💰</div>
+
+        <div class="token-count">Tokens: <span id="tokenCount">0</span></div>
+
+        <a href="#" class="button" onclick="cashOut()">💎 Cash Out</a>
     </div>
 
     <script>
-        // Function to generate a random token
-        function generateToken() {
-            const token = Math.random().toString(36).substr(2, 9); // Generates a random 9 character token
-            document.getElementById("tokenValue").textContent = token; // Display the token
-            document.getElementById("tokenOutput").style.display = "inline-block"; // Show the token element
+        let tokenCount = 0;
+
+        function earnToken() {
+            tokenCount++;
+            document.getElementById("tokenCount").textContent = tokenCount;
+        }
+
+        function cashOut() {
+            alert("You have cashed out " + tokenCount + " tokens!");
         }
     </script>
 </body>
