@@ -3,143 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turbo Token Clicker</title>
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <title>Crypto Luck - Mini Casino</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #ff9a44, #ff3e62);
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: white;
             text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-            color: #fff;
+            margin: 0;
             padding: 20px;
         }
-
         .container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
             max-width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin: auto;
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 600;
+        .wheel-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
         }
-
-        p {
-            font-size: 16px;
-            margin: 10px 0 20px;
-        }
-
-        .coin {
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, #ffd700, #ff8c00);
+        .wheel {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
-            font-weight: bold;
-            color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s ease, box-shadow 0.1s ease;
+            border: 5px solid #ffcc00;
+            position: relative;
+            transition: transform 3s ease-out;
+            background: conic-gradient(
+                #ffcc00 0deg 60deg,
+                #ff6600 60deg 120deg,
+                #ff0000 120deg 180deg,
+                #00cc00 180deg 240deg,
+                #0099ff 240deg 300deg,
+                #ff00ff 300deg 360deg
+            );
         }
-
-        .coin:active {
-            transform: scale(0.9);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        .wheel:before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: red;
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
         }
-
-        .token-count {
-            font-size: 22px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .button {
-            background: linear-gradient(135deg, #4CAF50, #008000);
+        .btn {
+            background: #ffcc00;
             border: none;
-            color: white;
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 50px;
+            padding: 10px;
+            width: 100%;
+            font-size: 18px;
+            margin: 10px 0;
             cursor: pointer;
-            transition: 0.3s ease;
-            margin-top: 20px;
-            display: inline-block;
-            text-decoration: none;
+            border-radius: 5px;
         }
-
-        .button:hover {
-            background: linear-gradient(135deg, #008000, #4CAF50);
-            transform: translateY(-3px);
+        .btn:hover {
+            background: #ffdd44;
         }
-
-        @media screen and (max-width: 500px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-
-            .coin {
-                width: 100px;
-                height: 100px;
-                font-size: 24px;
-            }
-
-            .button {
-                font-size: 14px;
-                padding: 10px 20px;
-            }
+        #result {
+            font-size: 20px;
+            margin: 15px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Turbo Token Clicker</h1>
-        <p>Tap the coin to earn tokens!</p>
-
-        <div class="coin" onclick="earnToken()">💰</div>
-
-        <div class="token-count">Tokens: <span id="tokenCount">0</span></div>
-
-        <a href="#" class="button" onclick="cashOut()">💎 Cash Out</a>
+        <h1>Crypto Luck</h1>
+        <p>Deposit crypto, play & win big!</p>
+        <div class="wheel-container">
+            <div class="wheel" id="wheel"></div>
+        </div>
+        <button class="btn" onclick="spinWheel()">Spin The Wheel</button>
+        <p id="result">Press the button to try your luck!</p>
     </div>
 
     <script>
-        let tokenCount = 0;
-
-        function earnToken() {
-            tokenCount++;
-            document.getElementById("tokenCount").textContent = tokenCount;
-        }
-
-        function cashOut() {
-            alert("You have cashed out " + tokenCount + " tokens!");
+        function spinWheel() {
+            let wheel = document.getElementById("wheel");
+            let randomDegree = Math.floor(3600 + Math.random() * 360);
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+            setTimeout(() => {
+                let outcomes = ["2x Win", "Try Again", "You Lost", "3x Win", "Try Again", "Jackpot 5x!"];
+                let result = outcomes[Math.floor(Math.random() * outcomes.length)];
+                document.getElementById("result").innerText = result;
+            }, 3000);
         }
     </script>
 </body>
