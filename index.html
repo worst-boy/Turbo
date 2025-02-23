@@ -6,15 +6,15 @@
     <title>Crypto Gamble - Fast Money Games</title>
     <style>
         /* General Reset */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #121212; color: white; text-align: center; padding: 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #181818; color: white; text-align: center; padding: 20px; }
         
-        /* Header */
-        h1 { font-size: 24px; margin-bottom: 10px; }
-        p { font-size: 14px; opacity: 0.8; }
-
         /* Container */
         .container { max-width: 400px; margin: auto; }
+
+        /* Header */
+        h1 { font-size: 28px; margin-bottom: 10px; font-weight: bold; }
+        p { font-size: 14px; opacity: 0.8; margin-bottom: 20px; }
 
         /* Buttons */
         .btn {
@@ -27,27 +27,61 @@
             font-size: 18px;
             cursor: pointer;
             transition: 0.3s;
+            font-weight: bold;
         }
-        .btn-primary { background: #ff9800; color: #fff; }
-        .btn-primary:hover { background: #e68900; }
-        .btn-secondary { background: #555; color: #fff; }
-        .btn-secondary:hover { background: #444; }
+        .btn-primary { background: #ff5722; color: #fff; }
+        .btn-primary:hover { background: #e64a19; }
+        .btn-secondary { background: #444; color: #fff; }
+        .btn-secondary:hover { background: #666; }
 
         /* Game Boxes */
         .game-box {
             background: #222;
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin: 15px 0;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 6px 12px rgba(255, 255, 255, 0.1);
         }
-        .game-box h2 { font-size: 20px; }
+        .game-box h2 { font-size: 20px; font-weight: bold; }
         .game-box p { margin: 10px 0; font-size: 14px; }
-        .game-box button { width: 80%; margin: 10px auto; }
+        .game-box input {
+            width: 80%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            text-align: center;
+        }
 
         /* Result Display */
-        #result { font-size: 22px; margin-top: 15px; font-weight: bold; }
+        #result { font-size: 20px; margin-top: 15px; font-weight: bold; }
+
+        /* Modal (Popup) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #292929;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            text-align: center;
+        }
+        .modal button { margin-top: 15px; }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -59,7 +93,7 @@
         <!-- Deposit & Balance -->
         <div class="game-box">
             <h2>Your Balance: <span id="balance">0</span> USDT</h2>
-            <button class="btn btn-primary" onclick="depositMoney()">💰 Deposit Crypto</button>
+            <button class="btn btn-primary" onclick="showDepositModal()">💰 Deposit Crypto</button>
         </div>
 
         <!-- Game 1: Double or Nothing -->
@@ -73,7 +107,7 @@
         <div class="game-box">
             <h2>1-Minute Challenge</h2>
             <p>Pick a number 1-10 and win 5x if it matches!</p>
-            <input type="number" id="userNumber" placeholder="Enter 1-10" min="1" max="10" style="width:80%; padding:5px;">
+            <input type="number" id="userNumber" placeholder="Enter 1-10" min="1" max="10">
             <button class="btn btn-secondary" onclick="playOneMinuteChallenge()">🔥 Play Now</button>
         </div>
 
@@ -88,61 +122,85 @@
         <p id="result"></p>
     </div>
 
+    <!-- Deposit Modal -->
+    <div id="depositModal" class="modal">
+        <div class="modal-content fade-in">
+            <h2>Deposit Funds</h2>
+            <p>Enter the amount you want to deposit (min $5)</p>
+            <input type="number" id="depositAmount" placeholder="Enter Amount">
+            <button class="btn btn-primary" onclick="depositMoney()">Confirm</button>
+            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
         let balance = 0;
 
-        // Simulate deposit
+        // Show deposit modal
+        function showDepositModal() {
+            document.getElementById("depositModal").style.display = "flex";
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById("depositModal").style.display = "none";
+        }
+
+        // Deposit Money
         function depositMoney() {
-            let deposit = prompt("Enter deposit amount (min $5):");
+            let deposit = document.getElementById("depositAmount").value;
             if (deposit && deposit >= 5) {
                 balance += parseFloat(deposit);
                 document.getElementById("balance").innerText = balance;
-                alert("Deposit successful!");
+                closeModal();
+                showResult("✅ Deposit Successful! Balance: " + balance + " USDT");
             } else {
-                alert("Minimum deposit is $5");
+                showResult("❌ Minimum deposit is $5");
             }
         }
 
         // Game 1: Double or Nothing
         function playDoubleOrNothing() {
-            if (balance <= 0) return alert("Deposit first!");
+            if (balance <= 0) return showResult("❌ Deposit first!");
             let bet = prompt("Enter bet amount:");
-            if (!bet || bet <= 0 || bet > balance) return alert("Invalid bet amount!");
+            if (!bet || bet <= 0 || bet > balance) return showResult("❌ Invalid bet amount!");
             bet = parseFloat(bet);
             let win = Math.random() < 0.5; // 50% chance
             balance = win ? balance + bet : balance - bet;
             document.getElementById("balance").innerText = balance;
-            document.getElementById("result").innerText = win ? "🎉 You WON! Balance doubled!" : "💀 You lost!";
+            showResult(win ? "🎉 You WON! Balance doubled!" : "💀 You lost!");
         }
 
         // Game 2: 1-Minute Challenge
         function playOneMinuteChallenge() {
-            if (balance < 5) return alert("Minimum bet is $5!");
+            if (balance < 5) return showResult("❌ Minimum bet is $5!");
             let userNum = document.getElementById("userNumber").value;
-            if (userNum < 1 || userNum > 10) return alert("Choose a number between 1-10!");
+            if (userNum < 1 || userNum > 10) return showResult("❌ Choose a number between 1-10!");
             let winningNum = Math.floor(Math.random() * 10) + 1;
             if (parseInt(userNum) === winningNum) {
                 balance += 25;
-                alert("🔥 You WON 5X your bet!");
+                showResult("🔥 You WON 5X your bet!");
             } else {
                 balance -= 5;
-                alert("❌ You lost this round.");
+                showResult("❌ You lost this round.");
             }
             document.getElementById("balance").innerText = balance;
         }
 
         // Game 3: Lucky Draw
         function playLuckyDraw() {
-            if (balance < 10) return alert("Minimum $10 to enter!");
+            if (balance < 10) return showResult("❌ Minimum $10 to enter!");
             balance -= 10;
             let win = Math.random() < 0.2; // 20% chance
-            if (win) {
-                balance += 50;
-                alert("🎉 YOU WON THE LUCKY DRAW! +$50");
-            } else {
-                alert("😢 Better luck next time.");
-            }
+            balance += win ? 50 : 0;
+            showResult(win ? "🎉 YOU WON THE LUCKY DRAW! +$50" : "😢 Better luck next time.");
             document.getElementById("balance").innerText = balance;
+        }
+
+        // Display result
+        function showResult(msg) {
+            document.getElementById("result").innerText = msg;
         }
     </script>
 
