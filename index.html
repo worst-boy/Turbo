@@ -3,98 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Luck - Mini Casino</title>
+    <title>Crypto Gamble - Fast Money Games</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #121212;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            background: #222;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        }
-        .wheel-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-        }
-        .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 5px solid #ffcc00;
-            position: relative;
-            transition: transform 3s ease-out;
-            background: conic-gradient(
-                #ffcc00 0deg 60deg,
-                #ff6600 60deg 120deg,
-                #ff0000 120deg 180deg,
-                #00cc00 180deg 240deg,
-                #0099ff 240deg 300deg,
-                #ff00ff 300deg 360deg
-            );
-        }
-        .wheel:before {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: red;
-            position: absolute;
-            top: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 50%;
-        }
+        /* General Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #121212; color: white; text-align: center; padding: 20px; }
+        
+        /* Header */
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        p { font-size: 14px; opacity: 0.8; }
+
+        /* Container */
+        .container { max-width: 400px; margin: auto; }
+
+        /* Buttons */
         .btn {
-            background: #ffcc00;
-            border: none;
-            padding: 10px;
+            display: block;
             width: 100%;
-            font-size: 18px;
+            padding: 15px;
             margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
             cursor: pointer;
-            border-radius: 5px;
+            transition: 0.3s;
         }
-        .btn:hover {
-            background: #ffdd44;
-        }
-        #result {
-            font-size: 20px;
+        .btn-primary { background: #ff9800; color: #fff; }
+        .btn-primary:hover { background: #e68900; }
+        .btn-secondary { background: #555; color: #fff; }
+        .btn-secondary:hover { background: #444; }
+
+        /* Game Boxes */
+        .game-box {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
             margin: 15px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
         }
+        .game-box h2 { font-size: 20px; }
+        .game-box p { margin: 10px 0; font-size: 14px; }
+        .game-box button { width: 80%; margin: 10px auto; }
+
+        /* Result Display */
+        #result { font-size: 22px; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Crypto Luck</h1>
-        <p>Deposit crypto, play & win big!</p>
-        <div class="wheel-container">
-            <div class="wheel" id="wheel"></div>
+        <h1>Crypto Gamble 🎰</h1>
+        <p>Deposit crypto & win instantly! Fast money, high risk, big rewards!</p>
+
+        <!-- Deposit & Balance -->
+        <div class="game-box">
+            <h2>Your Balance: <span id="balance">0</span> USDT</h2>
+            <button class="btn btn-primary" onclick="depositMoney()">💰 Deposit Crypto</button>
         </div>
-        <button class="btn" onclick="spinWheel()">Spin The Wheel</button>
-        <p id="result">Press the button to try your luck!</p>
+
+        <!-- Game 1: Double or Nothing -->
+        <div class="game-box">
+            <h2>Double or Nothing</h2>
+            <p>Bet your money and double it or lose it all!</p>
+            <button class="btn btn-secondary" onclick="playDoubleOrNothing()">🎲 Play Now</button>
+        </div>
+
+        <!-- Game 2: 1-Minute Challenge -->
+        <div class="game-box">
+            <h2>1-Minute Challenge</h2>
+            <p>Pick a number 1-10 and win 5x if it matches!</p>
+            <input type="number" id="userNumber" placeholder="Enter 1-10" min="1" max="10" style="width:80%; padding:5px;">
+            <button class="btn btn-secondary" onclick="playOneMinuteChallenge()">🔥 Play Now</button>
+        </div>
+
+        <!-- Game 3: Lucky Draw -->
+        <div class="game-box">
+            <h2>Lucky Draw</h2>
+            <p>Enter the pool for a chance to win big!</p>
+            <button class="btn btn-secondary" onclick="playLuckyDraw()">🎟 Enter Draw</button>
+        </div>
+
+        <!-- Result -->
+        <p id="result"></p>
     </div>
 
     <script>
-        function spinWheel() {
-            let wheel = document.getElementById("wheel");
-            let randomDegree = Math.floor(3600 + Math.random() * 360);
-            wheel.style.transform = `rotate(${randomDegree}deg)`;
-            setTimeout(() => {
-                let outcomes = ["2x Win", "Try Again", "You Lost", "3x Win", "Try Again", "Jackpot 5x!"];
-                let result = outcomes[Math.floor(Math.random() * outcomes.length)];
-                document.getElementById("result").innerText = result;
-            }, 3000);
+        let balance = 0;
+
+        // Simulate deposit
+        function depositMoney() {
+            let deposit = prompt("Enter deposit amount (min $5):");
+            if (deposit && deposit >= 5) {
+                balance += parseFloat(deposit);
+                document.getElementById("balance").innerText = balance;
+                alert("Deposit successful!");
+            } else {
+                alert("Minimum deposit is $5");
+            }
+        }
+
+        // Game 1: Double or Nothing
+        function playDoubleOrNothing() {
+            if (balance <= 0) return alert("Deposit first!");
+            let bet = prompt("Enter bet amount:");
+            if (!bet || bet <= 0 || bet > balance) return alert("Invalid bet amount!");
+            bet = parseFloat(bet);
+            let win = Math.random() < 0.5; // 50% chance
+            balance = win ? balance + bet : balance - bet;
+            document.getElementById("balance").innerText = balance;
+            document.getElementById("result").innerText = win ? "🎉 You WON! Balance doubled!" : "💀 You lost!";
+        }
+
+        // Game 2: 1-Minute Challenge
+        function playOneMinuteChallenge() {
+            if (balance < 5) return alert("Minimum bet is $5!");
+            let userNum = document.getElementById("userNumber").value;
+            if (userNum < 1 || userNum > 10) return alert("Choose a number between 1-10!");
+            let winningNum = Math.floor(Math.random() * 10) + 1;
+            if (parseInt(userNum) === winningNum) {
+                balance += 25;
+                alert("🔥 You WON 5X your bet!");
+            } else {
+                balance -= 5;
+                alert("❌ You lost this round.");
+            }
+            document.getElementById("balance").innerText = balance;
+        }
+
+        // Game 3: Lucky Draw
+        function playLuckyDraw() {
+            if (balance < 10) return alert("Minimum $10 to enter!");
+            balance -= 10;
+            let win = Math.random() < 0.2; // 20% chance
+            if (win) {
+                balance += 50;
+                alert("🎉 YOU WON THE LUCKY DRAW! +$50");
+            } else {
+                alert("😢 Better luck next time.");
+            }
+            document.getElementById("balance").innerText = balance;
         }
     </script>
+
 </body>
 </html>
