@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino MiniApp Prototype</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Casino MiniApp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,60 +12,68 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Roboto', sans-serif;
-            background: #f5f5f5;
-            color: #333;
-            padding-top: 70px; /* Space for header */
+            font-family: 'Inter', sans-serif;
+            background: #F7F9FA;
+            color: #2D3748;
+            padding-top: 70px;
             min-height: 100vh;
             overflow-x: hidden;
         }
+        /* Header */
         #header {
             position: fixed;
             top: 0;
             width: 100%;
-            background: #ffffff;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            height: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             z-index: 100;
         }
         #header span {
-            font-weight: 700;
-            margin: 0 10px;
-        }
-        #mode {
-            color: #dc3545;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: 0.5px;
         }
         #header button {
-            padding: 8px 16px;
-            background: #007BFF;
+            margin: 0 10px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #1E90FF, #00B4DB);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.3s;
         }
         #header button:hover {
-            background: #0056b3;
             transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(30,144,255,0.5);
         }
         #header button:disabled {
-            background: #ccc;
-            transform: none;
+            background: #D3DCE6;
+            color: #718096;
+            box-shadow: none;
             cursor: not-allowed;
         }
+
+        /* Screens */
         .screen {
             display: none;
-            padding: 25px;
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            background: linear-gradient(145deg, #FFFFFF, #F0F4F8);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
             margin: 20px auto;
-            max-width: 600px;
+            max-width: 480px;
             text-align: center;
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.5s, transform 0.5s;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
         }
         .screen.active {
             display: block;
@@ -73,111 +81,116 @@
             transform: translateY(0);
         }
         h1 {
-            color: #007BFF;
+            font-size: 32px;
+            font-weight: 700;
+            color: #1E90FF;
+            letter-spacing: 0.5px;
             margin-bottom: 20px;
-            font-size: 28px;
         }
+        p {
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
         button {
-            padding: 12px 24px;
-            margin: 10px;
-            background: #007BFF;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #1E90FF, #00B4DB);
             color: #fff;
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            border-radius: 12px;
             font-size: 16px;
-            transition: background 0.3s, transform 0.2s;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
         }
         button:hover {
-            background: #0056b3;
             transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(30,144,255,0.5);
         }
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Inputs */
         input, select {
             padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            margin: 15px 0;
             width: 100%;
             max-width: 300px;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
             font-size: 16px;
+            background: #FFFFFF;
+            color: #2D3748;
+            outline: none;
+            transition: border-color 0.2s;
         }
+        input:focus, select:focus {
+            border-color: #1E90FF;
+        }
+
+        /* Game Lobby */
         #games {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
         }
         .game {
             padding: 20px;
-           background: #f0f0f0;
-            border-radius: 10px;
+            background: #FFFFFF;
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #1E90FF, #00B4DB) 1;
+            border-radius: 15px;
+            width: 140px;
+            text-align: center;
             cursor: pointer;
-            width: 130px;
-            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         .game:hover {
-            background: #e0e0e0;
             transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(30,144,255,0.2);
         }
-        .coin {
-            font-size: 60px;
+        .game span {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .game p {
+            margin: 0;
+            font-weight: 600;
+            color: #2D3748;
+        }
+
+        /* Coin Animation */
+        #coin {
+            width: 100px;
+            height: 100px;
             margin: 20px auto;
+            background: radial-gradient(circle, #FFD700, #DAA520);
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-size: 48px;
+            line-height: 100px;
+            text-align: center;
+            color: #2D3748;
+            transition: transform 1s ease-in-out;
         }
-        .coin.flipping {
-            animation: flipCoin 1s ease-in-out;
-        }
-        @keyframes flipCoin {
-            0% { transform: rotateY(0deg); }
-            100% { transform: rotateY(1440deg); }
+        #coin.flipping {
+            transform: rotateY(1440deg);
         }
         #result {
             font-size: 24px;
+            font-weight: 600;
             margin: 20px 0;
         }
-        .result.win {
-            color: #28a745;
-            animation: bounce 0.5s;
+        #result.win {
+            color: #FFD700;
         }
-        .result.lose {
-            color: #dc3545;
-            animation: shake 0.5s;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        .spinner {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #007BFF;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1.5s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #notification {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #28a745;
-            color: #fff;
-            padding: 15px;
-            text-align: center;
-            transform: translateY(100%);
-            transition: transform 0.5s;
-            z-index: 200;
-            font-size: 16px;
+        #result.lose {
+            color: #FF6B6B;
         }
     </style>
 </head>
@@ -185,15 +198,14 @@
     <!-- Header -->
     <div id="header">
         <span id="balance">Balance: 0 chips</span>
-        <span id="mode" style="display:none;">Demo Mode</span>
         <button id="depositBtn">Deposit</button>
         <button id="withdrawBtn" disabled>Withdraw</button>
     </div>
 
     <!-- Welcome Screen -->
     <div id="welcome" class="screen active">
-        <h1>Welcome to Casino MiniApp</h1>
-        <p>Play now and win big!</p>
+        <h1>Casino MiniApp</h1>
+        <p>Start your winning streak now!</p>
         <button id="demoBtn">Try Demo (100 chips)</button>
         <button id="startBtn">Deposit & Play</button>
     </div>
@@ -215,156 +227,89 @@
     <div id="lobby" class="screen">
         <h1>Game Lobby</h1>
         <div id="games">
-            <div class="game" data-game="luckyFlip">🎲 Lucky Flip</div>
-            <div class="game" data-game="wheelSpin">🎡 Wheel Spin</div>
-            <div class="game" data-game="chickenRoad">🐔 Chicken Road</div>
-            <div class="game" data-game="towerClimb">🗼 Tower Climb</div>
+            <div class="game" data-game="luckyFlip"><span>🎲</span><p>Lucky Flip</p></div>
+            <div class="game" data-game="wheelSpin"><span>🎡</span><p>Wheel Spin</p></div>
+            <div class="game" data-game="chickenRoad"><span>🐔</span><p>Chicken Road</p></div>
+            <div class="game" data-game="towerClimb"><span>🗼</span><p>Tower Climb</p></div>
         </div>
     </div>
 
     <!-- Game Screen (Lucky Flip) -->
     <div id="game" class="screen">
         <h1>Lucky Flip</h1>
-        <div id="coin" class="coin">🪙</div>
-        <input type="number" id="betAmount" placeholder="Enter Bet Amount" min="1">
+        <div id="coin">🪙</div>
+        <input type="number" id="betAmount" placeholder="Enter Bet Amount">
         <button id="playBtn">Flip Coin</button>
-        <div id="result" class="result"></div>
-        <button id="tryAgainBtn" style="display:none;">Try Again?</button>
+        <div id="result"></div>
         <button id="backToLobbyBtn">Back to Lobby</button>
     </div>
 
-    <!-- Withdrawal Screen -->
-    <div id="withdraw" class="screen">
-        <h1>Withdraw Funds</h1>
-        <input type="text" id="withdrawAddress" placeholder="Your Crypto Address">
-        <button id="withdrawConfirmBtn">Withdraw</button>
-        <button id="backFromWithdrawBtn">Back</button>
-    </div>
-
-    <!-- Processing Screen -->
-    <div id="withdrawProcessing" class="screen">
-        <h1>Processing...</h1>
-        <p>Your withdrawal is in progress.</p>
-        <div class="spinner"></div>
-    </div>
-
-    <!-- Notification -->
-    <div id="notification"></div>
-
     <script>
-        let balance = parseInt(localStorage.getItem('balance')) || 0;
-        let isDemo = localStorage.getItem('isDemo') === 'true';
-        let isFirstDeposit = localStorage.getItem('hasDeposited') !== 'true';
-        let gameCount = 0;
+        let balance = 0;
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
-            if (screenId === 'lobby' && !isDemo) {
-                const today = new Date().toDateString();
-                const lastClaim = localStorage.getItem('lastClaim');
-                if (lastClaim !== today) {
-                    balance += 10;
-                    localStorage.setItem('lastClaim', today);
-                    localStorage.setItem('balance', balance);
-                    showNotification('You got 10 daily bonus chips!');
-                    updateBalance();
-                }
-            }
         }
 
         function updateBalance() {
             document.getElementById('balance').textContent = `Balance: ${balance} chips`;
-            document.getElementById('mode').style.display = isDemo ? 'inline' : 'none';
-            document.getElementById('withdrawBtn').disabled = balance <= 0 || isDemo;
-            localStorage.setItem('balance', balance);
-        }
-
-        function showNotification(message) {
-            const notif = document.getElementById('notification');
-            notif.textContent = message;
-            notif.style.transform = 'translateY(0)';
-            setTimeout(() => notif.style.transform = 'translateY(100%)', 3000);
+            document.getElementById('withdrawBtn').disabled = balance <= 0;
         }
 
         // Welcome Screen
         document.getElementById('demoBtn').addEventListener('click', () => {
-            isDemo = true;
-            localStorage.setItem('isDemo', 'true');
             balance = 100;
             updateBalance();
             showScreen('lobby');
         });
-
         document.getElementById('startBtn').addEventListener('click', () => {
             showScreen('deposit');
         });
 
         // Deposit Screen
         document.getElementById('depositConfirmBtn').addEventListener('click', () => {
-            isDemo = false;
-            localStorage.setItem('isDemo', 'false');
-            let depositAmount = 100;
-            if (isFirstDeposit) {
-                depositAmount += 10; // 10% bonus
-                localStorage.setItem('hasDeposited', 'true');
-                isFirstDeposit = false;
-            }
-            balance = depositAmount;
+            balance = 100;
             updateBalance();
             showScreen('lobby');
-            showNotification('Deposit successful!');
         });
-
         document.getElementById('backFromDepositBtn').addEventListener('click', () => {
             showScreen('welcome');
         });
 
-        // Game Selection
+        // Game Lobby
         document.querySelectorAll('.game').forEach(game => {
             game.addEventListener('click', () => {
                 if (game.dataset.game === 'luckyFlip') {
                     showScreen('game');
-                    document.getElementById('result').textContent = '';
-                    document.getElementById('tryAgainBtn').style.display = 'none';
                 }
             });
         });
 
-        // Game Logic
+        // Game Screen
         document.getElementById('playBtn').addEventListener('click', () => {
             const bet = parseInt(document.getElementById('betAmount').value);
             if (isNaN(bet) || bet <= 0 || bet > balance) {
-                showNotification('Invalid bet amount!');
+                document.getElementById('result').textContent = 'Invalid Bet!';
                 return;
             }
-            document.getElementById('coin').classList.add('flipping');
-            document.getElementById('result').textContent = 'Flipping...';
-            document.getElementById('result').className = 'result';
+            const coin = document.getElementById('coin');
+            coin.classList.add('flipping');
             setTimeout(() => {
-                document.getElementById('coin').classList.remove('flipping');
-                gameCount++;
-                const winProbability = gameCount <= 3 ? 0.8 : 0.5;
-                const win = Math.random() < winProbability;
+                coin.classList.remove('flipping');
+                const win = Math.random() > 0.5;
                 if (win) {
                     balance += bet;
-                    document.getElementById('result').textContent = 'You Win! 🎉';
-                    document.getElementById('result').className = 'result win';
-                    showNotification('You won ' + bet + ' chips!');
+                    document.getElementById('result').textContent = 'You Win!';
+                    document.getElementById('result').className = 'win';
                 } else {
                     balance -= bet;
                     document.getElementById('result').textContent = 'You Lose!';
-                    document.getElementById('result').className = 'result lose';
-                    document.getElementById('tryAgainBtn').style.display = 'inline';
+                    document.getElementById('result').className = 'lose';
                 }
                 updateBalance();
             }, 1000);
         });
-
-        document.getElementById('tryAgainBtn').addEventListener('click', () => {
-            document.getElementById('playBtn').click();
-        });
-
         document.getElementById('backToLobbyBtn').addEventListener('click', () => {
             showScreen('lobby');
         });
@@ -373,36 +318,10 @@
         document.getElementById('depositBtn').addEventListener('click', () => {
             showScreen('deposit');
         });
-
         document.getElementById('withdrawBtn').addEventListener('click', () => {
-            if (isDemo) {
-                showNotification('Withdrawals unavailable in Demo Mode');
-            } else {
-                showScreen('withdraw');
-            }
+            alert('Withdraw Coming Soon');
         });
 
-        // Withdrawal Logic
-        document.getElementById('withdrawConfirmBtn').addEventListener('click', () => {
-            const address = document.getElementById('withdrawAddress').value;
-            if (!address) {
-                showNotification('Please enter an address!');
-                return;
-            }
-            showScreen('withdrawProcessing');
-            setTimeout(() => {
-                showNotification('Withdrawal successful!');
-                balance = 0;
-                updateBalance();
-                showScreen('lobby');
-            }, 3000);
-        });
-
-        document.getElementById('backFromWithdrawBtn').addEventListener('click', () => {
-            showScreen('lobby');
-        });
-
-        // Initialize
         updateBalance();
     </script>
 </body>
