@@ -4,106 +4,203 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Casino MiniApp Prototype</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding-top: 60px; /* Space for fixed header */
-            background: #1a1a1a;
-            color: #fff;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            padding-top: 70px; /* Space for header */
+            min-height: 100vh;
+            overflow-x: hidden;
         }
         #header {
             position: fixed;
             top: 0;
             width: 100%;
-            background: #333;
-            padding: 10px;
+            background: #ffffff;
+            padding: 15px;
             text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+        #header span {
+            font-weight: 700;
+            margin: 0 10px;
+        }
+        #mode {
+            color: #dc3545;
         }
         #header button {
-            margin: 0 10px;
-            background: #ffd700;
-            color: #333;
+            padding: 8px 16px;
+            background: #007BFF;
+            color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        #header button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
         }
         #header button:disabled {
-            background: #666;
+            background: #ccc;
+            transform: none;
             cursor: not-allowed;
         }
         .screen {
             display: none;
-            padding: 20px;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            max-width: 600px;
             text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
         }
         .screen.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
         h1 {
-            color: #ffd700;
+            color: #007BFF;
+            margin-bottom: 20px;
+            font-size: 28px;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             margin: 10px;
-            background: #ff4500;
-            color: white;
+            background: #007BFF;
+            color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.2s;
         }
         button:hover {
-            background: #ff6347;
+            background: #0056b3;
+            transform: scale(1.05);
         }
         input, select {
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #666;
-            background: #333;
-            color: white;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 300px;
+            font-size: 16px;
         }
         #games {
             display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
         .game {
             padding: 20px;
-            background: #444;
+           background: #f0f0f0;
             border-radius: 10px;
             cursor: pointer;
-            width: 100px;
-            transition: transform 0.2s;
+            width: 130px;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
         }
         .game:hover {
-            transform: scale(1.05);
+            background: #e0e0e0;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .coin {
+            font-size: 60px;
+            margin: 20px auto;
+        }
+        .coin.flipping {
+            animation: flipCoin 1s ease-in-out;
+        }
+        @keyframes flipCoin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(1440deg); }
         }
         #result {
             font-size: 24px;
-            margin-top: 20px;
+            margin: 20px 0;
+        }
+        .result.win {
+            color: #28a745;
+            animation: bounce 0.5s;
+        }
+        .result.lose {
+            color: #dc3545;
+            animation: shake 0.5s;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #007BFF;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1.5s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #notification {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #28a745;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.5s;
+            z-index: 200;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <!-- Header with Balance and Navigation -->
+    <!-- Header -->
     <div id="header">
         <span id="balance">Balance: 0 chips</span>
+        <span id="mode" style="display:none;">Demo Mode</span>
         <button id="depositBtn">Deposit</button>
         <button id="withdrawBtn" disabled>Withdraw</button>
     </div>
 
     <!-- Welcome Screen -->
     <div id="welcome" class="screen active">
-        <h1>Welcome to the Casino MiniApp</h1>
-        <button id="demoBtn">Try a Demo with 100 USDT</button>
-        <button id="startBtn">Deposit & Start Playing</button>
+        <h1>Welcome to Casino MiniApp</h1>
+        <p>Play now and win big!</p>
+        <button id="demoBtn">Try Demo (100 chips)</button>
+        <button id="startBtn">Deposit & Play</button>
     </div>
 
     <!-- Deposit Screen -->
     <div id="deposit" class="screen">
-        <h1>Deposit</h1>
+        <h1>Deposit Funds</h1>
         <select id="cryptoSelect">
             <option value="BTC">BTC</option>
             <option value="ETH">ETH</option>
@@ -118,7 +215,7 @@
     <div id="lobby" class="screen">
         <h1>Game Lobby</h1>
         <div id="games">
-            <div class="game" data-game="luckyFlip">🎰 Lucky Flip</div>
+            <div class="game" data-game="luckyFlip">🎲 Lucky Flip</div>
             <div class="game" data-game="wheelSpin">🎡 Wheel Spin</div>
             <div class="game" data-game="chickenRoad">🐔 Chicken Road</div>
             <div class="game" data-game="towerClimb">🗼 Tower Climb</div>
@@ -128,16 +225,17 @@
     <!-- Game Screen (Lucky Flip) -->
     <div id="game" class="screen">
         <h1>Lucky Flip</h1>
-        <input type="number" id="betAmount" placeholder="Bet Amount" min="1">
-        <button id="playBtn">Play</button>
-        <div id="result"></div>
-        <button id="tryAgainBtn" style="display: none;">Try Again? 🎮</button>
+        <div id="coin" class="coin">🪙</div>
+        <input type="number" id="betAmount" placeholder="Enter Bet Amount" min="1">
+        <button id="playBtn">Flip Coin</button>
+        <div id="result" class="result"></div>
+        <button id="tryAgainBtn" style="display:none;">Try Again?</button>
         <button id="backToLobbyBtn">Back to Lobby</button>
     </div>
 
     <!-- Withdrawal Screen -->
     <div id="withdraw" class="screen">
-        <h1>Withdraw</h1>
+        <h1>Withdraw Funds</h1>
         <input type="text" id="withdrawAddress" placeholder="Your Crypto Address">
         <button id="withdrawConfirmBtn">Withdraw</button>
         <button id="backFromWithdrawBtn">Back</button>
@@ -146,29 +244,54 @@
     <!-- Processing Screen -->
     <div id="withdrawProcessing" class="screen">
         <h1>Processing...</h1>
-        <p>Your withdrawal is being processed. Please wait.</p>
+        <p>Your withdrawal is in progress.</p>
+        <div class="spinner"></div>
     </div>
 
-    <script>
-        let balance = 0;
-        let gameCount = 0;
-        let isFirstDeposit = true;
+    <!-- Notification -->
+    <div id="notification"></div>
 
-        // Show/Hide Screens
+    <script>
+        let balance = parseInt(localStorage.getItem('balance')) || 0;
+        let isDemo = localStorage.getItem('isDemo') === 'true';
+        let isFirstDeposit = localStorage.getItem('hasDeposited') !== 'true';
+        let gameCount = 0;
+
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
+            if (screenId === 'lobby' && !isDemo) {
+                const today = new Date().toDateString();
+                const lastClaim = localStorage.getItem('lastClaim');
+                if (lastClaim !== today) {
+                    balance += 10;
+                    localStorage.setItem('lastClaim', today);
+                    localStorage.setItem('balance', balance);
+                    showNotification('You got 10 daily bonus chips!');
+                    updateBalance();
+                }
+            }
         }
 
-        // Update Balance Display
         function updateBalance() {
             document.getElementById('balance').textContent = `Balance: ${balance} chips`;
-            document.getElementById('withdrawBtn').disabled = balance <= 0;
+            document.getElementById('mode').style.display = isDemo ? 'inline' : 'none';
+            document.getElementById('withdrawBtn').disabled = balance <= 0 || isDemo;
+            localStorage.setItem('balance', balance);
         }
 
-        // Welcome Screen Buttons
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.style.transform = 'translateY(0)';
+            setTimeout(() => notif.style.transform = 'translateY(100%)', 3000);
+        }
+
+        // Welcome Screen
         document.getElementById('demoBtn').addEventListener('click', () => {
-            balance = 100; // Demo mode gives 100 chips
+            isDemo = true;
+            localStorage.setItem('isDemo', 'true');
+            balance = 100;
             updateBalance();
             showScreen('lobby');
         });
@@ -179,14 +302,18 @@
 
         // Deposit Screen
         document.getElementById('depositConfirmBtn').addEventListener('click', () => {
+            isDemo = false;
+            localStorage.setItem('isDemo', 'false');
             let depositAmount = 100;
             if (isFirstDeposit) {
-                depositAmount += 5; // 5% bonus for first deposit
+                depositAmount += 10; // 10% bonus
+                localStorage.setItem('hasDeposited', 'true');
                 isFirstDeposit = false;
             }
-            balance += depositAmount;
+            balance = depositAmount;
             updateBalance();
             showScreen('lobby');
+            showNotification('Deposit successful!');
         });
 
         document.getElementById('backFromDepositBtn').addEventListener('click', () => {
@@ -196,42 +323,46 @@
         // Game Selection
         document.querySelectorAll('.game').forEach(game => {
             game.addEventListener('click', () => {
-                if (game.dataset.game === 'luckyFlip') { // Only Lucky Flip implemented
+                if (game.dataset.game === 'luckyFlip') {
                     showScreen('game');
+                    document.getElementById('result').textContent = '';
+                    document.getElementById('tryAgainBtn').style.display = 'none';
                 }
             });
         });
 
-        // Game Play Logic
+        // Game Logic
         document.getElementById('playBtn').addEventListener('click', () => {
             const bet = parseInt(document.getElementById('betAmount').value);
             if (isNaN(bet) || bet <= 0 || bet > balance) {
-                alert('Please enter a valid bet amount within your balance.');
+                showNotification('Invalid bet amount!');
                 return;
             }
+            document.getElementById('coin').classList.add('flipping');
             document.getElementById('result').textContent = 'Flipping...';
-            document.getElementById('result').style.color = '#ccc';
-            document.getElementById('tryAgainBtn').style.display = 'none';
+            document.getElementById('result').className = 'result';
             setTimeout(() => {
+                document.getElementById('coin').classList.remove('flipping');
                 gameCount++;
-                const winProbability = gameCount <= 3 ? 0.8 : 0.5; // Rigged: 80% early, 50% later
+                const winProbability = gameCount <= 3 ? 0.8 : 0.5;
                 const win = Math.random() < winProbability;
                 if (win) {
                     balance += bet;
-                    document.getElementById('result').textContent = 'You Win!';
-                    document.getElementById('result').style.color = '#00ff00';
+                    document.getElementById('result').textContent = 'You Win! 🎉';
+                    document.getElementById('result').className = 'result win';
+                    showNotification('You won ' + bet + ' chips!');
                 } else {
                     balance -= bet;
                     document.getElementById('result').textContent = 'You Lose!';
-                    document.getElementById('result').style.color = '#ff0000';
+                    document.getElementById('result').className = 'result lose';
                     document.getElementById('tryAgainBtn').style.display = 'inline';
                 }
                 updateBalance();
-            }, 1000); // 1-second flip animation
+            }, 1000);
         });
 
         document.getElementById('tryAgainBtn').addEventListener('click', () => {
-            document.getElementById('playBtn').click(); // Replay with same bet
+            document.getElementById('playBtn').click();
         });
 
         document.getElementById('backToLobbyBtn').addEventListener('click', () => {
@@ -244,30 +375,34 @@
         });
 
         document.getElementById('withdrawBtn').addEventListener('click', () => {
-            showScreen('withdraw');
+            if (isDemo) {
+                showNotification('Withdrawals unavailable in Demo Mode');
+            } else {
+                showScreen('withdraw');
+            }
         });
 
         // Withdrawal Logic
         document.getElementById('withdrawConfirmBtn').addEventListener('click', () => {
             const address = document.getElementById('withdrawAddress').value;
             if (!address) {
-                alert('Please enter a crypto address.');
+                showNotification('Please enter an address!');
                 return;
             }
             showScreen('withdrawProcessing');
             setTimeout(() => {
-                alert('Withdrawal Successful! (Simulated)');
+                showNotification('Withdrawal successful!');
                 balance = 0;
                 updateBalance();
                 showScreen('lobby');
-            }, 3000); // 3-second artificial delay
+            }, 3000);
         });
 
         document.getElementById('backFromWithdrawBtn').addEventListener('click', () => {
             showScreen('lobby');
         });
 
-        // Initial Setup
+        // Initialize
         updateBalance();
     </script>
 </body>
