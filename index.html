@@ -3,134 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Gamble - Fast Money Games</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>MiniApp</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #f5f5f5; color: #333; text-align: center; padding: 20px; }
-        
-        .container { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
-        h1 { font-size: 26px; margin-bottom: 15px; color: #222; font-weight: 600; }
-        p { font-size: 14px; margin-bottom: 20px; color: #666; }
-        
-        .btn {
-            display: block; width: 100%; padding: 15px; margin: 10px 0;
-            border: none; border-radius: 8px; font-size: 16px; cursor: pointer;
-            transition: 0.3s; font-weight: 600;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
-        .btn-primary { background: #007bff; color: #fff; }
-        .btn-primary:hover { background: #0056b3; }
-        .btn-secondary { background: #28a745; color: #fff; }
-        .btn-secondary:hover { background: #218838; }
-        
-        .game-box {
-            background: #fff; padding: 15px; border-radius: 8px; margin: 15px 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        body {
+            background: #f9f9f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
         }
-        .game-box h2 { font-size: 20px; font-weight: 600; color: #444; }
-        .game-box p { margin: 10px 0; font-size: 14px; color: #666; }
-        .game-box input {
-            width: 100%; padding: 10px; border: 1px solid #ddd;
-            border-radius: 6px; font-size: 16px; text-align: center;
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
         }
-        
-        #result { font-size: 18px; margin-top: 15px; font-weight: 600; color: #ff5722; }
-        
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);
-            align-items: center; justify-content: center;
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            color: white;
+            width: 100%;
+            border-radius: 10px;
         }
-        .modal-content {
-            background: #fff; padding: 20px; border-radius: 10px; width: 80%;
-            text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .games {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .game {
+            background: #ff758c;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .game:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #ff7eb3, #ff758c);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Crypto Gamble 🎰</h1>
-        <p>Deposit crypto & win instantly! Fast money, high risk, big rewards!</p>
-        
-        <div class="game-box">
-            <h2>Your Balance: <span id="balance">0</span> USDT</h2>
-            <button class="btn btn-primary" onclick="showDepositModal()">💰 Deposit Crypto</button>
-        </div>
-        
-        <div class="game-box">
-            <h2>Double or Nothing</h2>
-            <button class="btn btn-secondary" onclick="playDoubleOrNothing()">🎲 Play Now</button>
-        </div>
-        
-        <div class="game-box">
-            <h2>1-Minute Challenge</h2>
-            <input type="number" id="userNumber" placeholder="Enter 1-10" min="1" max="10">
-            <button class="btn btn-secondary" onclick="playOneMinuteChallenge()">🔥 Play Now</button>
-        </div>
-        
-        <div class="game-box">
-            <h2>Lucky Draw</h2>
-            <button class="btn btn-secondary" onclick="playLuckyDraw()">🎟 Enter Draw</button>
-        </div>
-        
-        <p id="result"></p>
+    <div class="container" id="main-screen">
+        <h1>Welcome to MiniApp</h1>
+        <button class="button" onclick="startDemo()">Try a Demo with 100 USDT</button>
+        <button class="button" onclick="deposit()">Deposit & Start Playing</button>
     </div>
-    
-    <div id="depositModal" class="modal">
-        <div class="modal-content">
-            <h2>Deposit Funds</h2>
-            <input type="number" id="depositAmount" placeholder="Enter Amount">
-            <button class="btn btn-primary" onclick="depositMoney()">Confirm</button>
-            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+
+    <div class="container" id="game-screen" style="display: none; width: 100%; max-width: 500px;">
+        <div class="top-bar">
+            <div class="profile">
+                <img src="https://via.placeholder.com/40" alt="Profile">
+                <span>Player</span>
+            </div>
+            <div class="balance">Balance: <span id="balance">100</span> USDT</div>
         </div>
+        <h1>Select a Game</h1>
+        <div class="games">
+            <div class="game" onclick="playGame('Lucky Flip')">🎰 Lucky Flip</div>
+            <div class="game" onclick="playGame('Wheel Spin')">🎡 Wheel Spin</div>
+            <div class="game" onclick="playGame('Chicken Road')">🐔 Chicken Road</div>
+            <div class="game" onclick="playGame('Tower Climb')">🏔️ Tower Climb</div>
+        </div>
+        <button class="button" onclick="goBack()">Go Back</button>
     </div>
-    
+
+    <div class="container" id="deposit-screen" style="display: none;">
+        <h1>Deposit Funds</h1>
+        <p>Send crypto to the following address:</p>
+        <p><strong>1A2b3C4d5E6f...</strong></p>
+        <button class="button" onclick="goBack()">Go Back</button>
+    </div>
+
     <script>
-        let balance = 0;
-        function showDepositModal() { document.getElementById("depositModal").style.display = "flex"; }
-        function closeModal() { document.getElementById("depositModal").style.display = "none"; }
-        function depositMoney() {
-            let deposit = document.getElementById("depositAmount").value;
-            if (deposit >= 5) {
-                balance += parseFloat(deposit);
-                document.getElementById("balance").innerText = balance;
-                closeModal();
-                showResult("✅ Deposit Successful! Balance: " + balance + " USDT");
-            } else {
-                showResult("❌ Minimum deposit is $5");
-            }
+        function startDemo() {
+            document.getElementById("main-screen").style.display = "none";
+            document.getElementById("game-screen").style.display = "block";
         }
-        function playDoubleOrNothing() {
-            if (balance <= 0) return showResult("❌ Deposit first!");
-            let bet = prompt("Enter bet amount:");
-            if (bet > 0 && bet <= balance) {
-                balance = Math.random() < 0.5 ? balance + parseFloat(bet) : balance - parseFloat(bet);
-                document.getElementById("balance").innerText = balance;
-                showResult(balance > 0 ? "🎉 You WON!" : "💀 You lost!");
-            }
+
+        function deposit() {
+            document.getElementById("main-screen").style.display = "none";
+            document.getElementById("deposit-screen").style.display = "block";
         }
-        function playOneMinuteChallenge() {
-            if (balance < 5) return showResult("❌ Minimum bet is $5!");
-            let userNum = document.getElementById("userNumber").value;
-            let winningNum = Math.floor(Math.random() * 10) + 1;
-            if (userNum == winningNum) {
-                balance += 25;
-                showResult("🔥 You WON 5X your bet!");
-            } else {
-                balance -= 5;
-                showResult("❌ You lost this round.");
-            }
-            document.getElementById("balance").innerText = balance;
+
+        function playGame(game) {
+            alert("You are now playing " + game + "!");
         }
-        function playLuckyDraw() {
-            if (balance < 10) return showResult("❌ Minimum $10 to enter!");
-            balance -= 10;
-            let win = Math.random() < 0.2;
-            balance += win ? 50 : 0;
-            showResult(win ? "🎉 YOU WON THE LUCKY DRAW! +$50" : "😢 Better luck next time.");
-            document.getElementById("balance").innerText = balance;
+
+        function goBack() {
+            document.getElementById("game-screen").style.display = "none";
+            document.getElementById("deposit-screen").style.display = "none";
+            document.getElementById("main-screen").style.display = "block";
         }
-        function showResult(msg) { document.getElementById("result").innerText = msg; }
     </script>
 </body>
 </html>
